@@ -33,7 +33,6 @@ module PearWarranty
       if page =~ /(but this serial number is not valid)|(but the serial number you have provided cannot be found in our records)/
         { error: 'There is no such imei or service is not available at this moment' }
       else
-        puts page.split('warrantyPage.warrantycheck.displayPHSupportInfo')
         text = page.split('warrantyPage.warrantycheck.displayPHSupportInfo')[1].scan(/\(.*\)/)[0].delete('()')
         params = text.split(', ')
         warranty = to_boolean(params.first.delete ' ')
