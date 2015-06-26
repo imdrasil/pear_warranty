@@ -9,33 +9,42 @@ module PearWarranty
 
   def self.check(serial, proxy_index = nil)
     agent = Mechanize.new
-    proxy_index ||= rand(PROXIES.size)
+    proxies = [0,1,2,3,4,5,6,7,8,9]
+    unless proxy_index
+      proxy_index = rand(PROXIES.size)
+    else
+      proxies -= [proxy_index]
+    end
     page = nil
     error = true
     apple_url = "https://selfsolve.apple.com/wcResults.do?sn=#{serial}&Continue=Continue&num=0"
+    correct_reg = /warrantyPage\.warrantycheck\.displayHWSupportInfo/
+    invalid_reg = [/but this serial number is not valid/, /but the serial number you have provided cannot be found in our records/]
     TRIES.times do
       form = get_form(proxy_index, apple_url, agent)
       set_cookie(agent)
       begin
         page = agent.submit(form)
       rescue Net::HTTP::Persistent::Error
-        proxy_index = rand(PROXIES.size)
+        proxy_index = proxies[rand(proxies.size)]
+        proxies -= [proxy_index]
         next
       end
       page = page.body
-      unless page =~ /pferror/
+      if page =~ correct_reg or page =~ invalid_reg[1] or page =~ invalid_reg[0]
         error = false
         break
       end
-      proxy_index = rand(PROXIES.size)
+      proxy_index = proxies[rand(proxies.size)]
+      proxies -= [proxy_index]
     end
     if error
       {error: 'Problem with proxy'}
     else
-      if page =~ /(but this serial number is not valid)|(but the serial number you have provided cannot be found in our records)/
+      unless page =~ correct_reg
         { error: 'There is no such imei or service is not available at this moment' }
       else
-        text = page.split('warrantyPage.warrantycheck.displayPHSupportInfo')[1].scan(/\(.*\)/)[0].delete('()')
+        text = page.split(correct_reg)[1].scan(/\(.*\)/)[0].delete('()')
         params = text.split(', ')
         warranty = to_boolean(params.first.delete ' ')
         {

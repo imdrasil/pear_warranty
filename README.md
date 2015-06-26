@@ -41,6 +41,37 @@ PearWarranty.check('your IMEI here', 0)
 ```
 Proxy index must be in range of 0 and `PearWarranty::PROXIES.size`. If it goes out randomly chosen will be used.
 
+### Available proxies:
+
+* 0 - Canada East
+* 1 - Germany
+* 2 - France (Strasbourg)
+* 3 - Netherlands
+* 4 - France (Roubaix)
+* 5 - France (Gravelines)
+* 6 - United States Central (TX)
+* 7 - United States East (NJ)
+* 8 - United States Central (IL)
+* 9 - United States East (GA)
+
+To improve speed your should to test which of proxies works for you most frequently. For my location (Ukraine) speed test show that result (each one is for 50 requests):
+
+Proxy index | Location | Speed
+:----------:|:--------:|:----:
+0 | Canada | 94.452161
+1 | Germany | 138.392749
+2 | Strasbourg | 79.161559
+3 | Netherlands | 133.401920
+4 | Roubaix | 70.684222
+5 | Gravelines | 71.803946
+6 | TX | 83.853322
+7 | NJ | 75.568946
+8 | IL | 103.772447
+9 | GA | 75.414354
+- | random | 114.406067
+
+That`s why I prefer to use France (Roubaix) - 4th proxy.
+
 ## Dependencies
 
 - mechanize

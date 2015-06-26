@@ -82,7 +82,7 @@ RSpec.describe PearWarranty do
   end
 
   context :check, type: :request do
-    let(:date) { Date.new(2015, 9, 9)}
+    let(:date) { Date.new(2016, 6, 10)}
     before :all do
       @without_imei = '013896000639712'
       @with_imei = '013977000323877'

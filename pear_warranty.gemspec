@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["moranibaca@gmail.com"]
   spec.summary       = %q{Get IPhone warranty information}
   spec.description   = %q{Get IPhone warranty information form  https://selfsolve.apple.com by device imei}
-  spec.homepage      = ""
+  spec.homepage      = "https://github.com/imdrasil/pear_warranty"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0")
