@@ -9,15 +9,17 @@ module PearWarranty
 
   def self.check(serial, proxy_index = nil)
     agent = Mechanize.new
-    proxy_index ||= rand(COOKIES.size)
+    proxy_index ||= rand(PROXIES.size)
     page = nil
     error = true
+    apple_url = "https://selfsolve.apple.com/wcResults.do?sn=#{serial}&Continue=Continue&num=0"
     TRIES.times do
-      form = get_form(proxy_index, "https://selfsolve.apple.com/wcResults.do?sn=#{serial}&Continue=Continue&num=0", agent)
+      form = get_form(proxy_index, apple_url, agent)
       set_cookie(agent)
       begin
         page = agent.submit(form)
       rescue Net::HTTP::Persistent::Error
+        proxy_index = rand(PROXIES.size)
         next
       end
       page = page.body
@@ -25,7 +27,7 @@ module PearWarranty
         error = false
         break
       end
-      proxy_index = rand(COOKIES.size)
+      proxy_index = rand(PROXIES.size)
     end
     if error
       {error: 'Problem with proxy'}
