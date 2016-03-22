@@ -14,3 +14,4 @@
 *.gem
 mkmf.log
 /.idea/
+.byebug_history

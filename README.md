@@ -4,27 +4,27 @@ An easy to use simple gem that allow you to check your IPhone warranty informati
 
 This gem use _https://www.proxfree.com_ to not be banned by IP. That`s why we get a little bit slowly request but there is no another free and simple way to get access to your warranty information.
 
+Last test on real imei was on July, 2015.
+
 ## Installation
 
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'pear_warranty'
+gem 'pear_warranty', git: 'https://github.com/imdrasil/pear_warranty.git', branch: 'master'
 ```
 
 And then execute:
 
     $ bundle
 
-Or install it yourself as:
-
-    $ gem install pear_warranty
+The latest version of gem is on master branch.
 
 ## Usage
 
 To get warranty information about your IPhone just call:
 ```
-PearWarranty.check('your IMEI here')
+PearWarranty::Parser.check('your IMEI here')
 ```
 That call return hash with warranty information. If your device is out of Repairs and Service Coverage it will return hash:
 ```
@@ -35,42 +35,52 @@ That call return hash with warranty information. If your device is out of Repair
 ```
 In another situation it returns hash with `true` for `:warranty` key and `Date` object of estimated expiration date for `:date`. If there is error with proxy server or your IMEI hash with `:error` key and description message will be returned.
 
-Also your can specify proxy index domain by passing `proxy_index` parameter:
+Also your can specify proxy name domain:
 ```
-PearWarranty.check('your IMEI here', 0)
+PearWarranty::Parser.check('your IMEI here', 'qc')
 ```
 Proxy index must be in range of 0 and `PearWarranty::PROXIES.size`. If it goes out randomly chosen will be used.
 
 ### Available proxies:
 
-* 0 - Canada East
-* 1 - Germany
-* 2 - France (Strasbourg)
-* 3 - Netherlands
-* 4 - France (Roubaix)
-* 5 - France (Gravelines)
-* 6 - United States Central (TX)
-* 7 - United States East (NJ)
-* 8 - United States Central (IL)
-* 9 - United States East (GA)
+* qc - Canada East
+* def - Germany
+* al - France (Strasbourg)
+* nl - Netherlands
+* fr - France (Roubaix)
+* no - France (Gravelines)
+* tx - United States Central (TX)
+* nj - United States East (NJ)
+* il - United States Central (IL)
+* ga - United States East (GA)
 
 To improve speed your should to test which of proxies works for you most frequently. For my location (Ukraine) speed test show that result (each one is for 50 requests):
 
-Proxy index | Location | Speed
-:----------:|:--------:|:----:
-0 | Canada | 94.452161
-1 | Germany | 138.392749
-2 | Strasbourg | 79.161559
-3 | Netherlands | 133.401920
-4 | Roubaix | 70.684222
-5 | Gravelines | 71.803946
-6 | TX | 83.853322
-7 | NJ | 75.568946
-8 | IL | 103.772447
-9 | GA | 75.414354
-- | random | 114.406067
+Location | Speed
+:--------:|:----:
+Canada | 94.452161
+Germany | 138.392749
+Strasbourg | 79.161559
+Netherlands | 133.401920
+Roubaix | 70.684222
+Gravelines | 71.803946
+TX | 83.853322
+NJ | 75.568946
+IL | 103.772447
+GA | 75.414354
 
 That`s why I prefer to use France (Roubaix) - 4th proxy.
+
+### Configuration
+You can specify such parameters:
+
+Parameter | Description | Default value
+:--------:|:-----------:|:------------:
+default_proxy | proxy, which is used every time for first request | 'qc'
+use_list | array of proxies which be used for searching | `%w(qc def al nl fr no tx nj il ga)`
+switch_proxy | `:random` - proxy will be switched in random order; `:given` - in `use_list` order | :random
+max_retries | maximum retries | 10
+cookie | hash with default cookies | default set is given but may be invalid for now (hardcoded for use in project)
 
 ## Dependencies
 
